@@ -20,7 +20,7 @@ class App extends Component {
         selectedStartDate: new Date('2019-02-10T21:11:54'),
         selectedEndDate: new Date('2019-02-13T21:11:54'),
         dates: [],
-        dateConst:[]
+        dateConst: []
 
     };
 
@@ -61,13 +61,13 @@ class App extends Component {
 
         for (let i = 0; i < this.state.dateConst.length; i++) {
             // console.log(new Date(this.state.dateConst[i].createdAt).setHours(0, 0, 0, 0))
-             //console.log('start date', dateStart)
+            //console.log('start date', dateStart)
             if (new Date(this.state.dateConst[i].createdAt).setHours(0, 0, 0, 0) >= dateStart && new Date(this.state.dateConst[i].createdAt).setHours(0, 0, 0, 0) <= dateEnd) {
                 tempData.push(this.state.dateConst[i])
 
             }
         }
-console.log(tempData)
+        console.log(tempData)
         this.setState({dates: tempData})
 
 
