@@ -15,17 +15,14 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 
-
-
 class App extends Component {
     state = {
-        selectedStartDate: new Date('2019-02-18T21:11:54'),
-        selectedEndDate: new Date('2019-02-23T21:11:54'),
-        dates: []
+        selectedStartDate: new Date('2019-02-10T21:11:54'),
+        selectedEndDate: new Date('2019-02-13T21:11:54'),
+        dates: [],
+        dateConst:[]
 
     };
-
-
 
 
     handleStartDateChange = date => {
@@ -35,16 +32,18 @@ class App extends Component {
         this.setState({selectedEndDate: date});
     };
 
-componentDidMount() {
+    componentDidMount() {
 
         axios.get('http://devapi.mastbit.com/api/User/GetAllTransactions',
             {
                 headers: {
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaGl2MzM1OCIsImp0aSI6ImY0YjYzZjVlLTVlMWEtNGEzNC1iNWZmLTllODQwYWM0NGQ0NSIsImlhdCI6MTU1MjI3Njc1NiwibmJmIjoxNTUyMjc2NzU2LCJleHAiOjE1NTIyODM5NTYsImlzcyI6Imh0dHA6Ly9hcGkubWFzdGJpdC5jb206MzYxMTUiLCJhdWQiOiJodHRwOi8vd3d3Lm1hc3RiaXQuY29tIn0.7_fgCJyGTfHwJApMgUWKJJ605q55Y8l5ro51a2w2tTQ'
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaGl2MzM1OCIsImp0aSI6IjU3OTQzOGJhLTljNzItNDM3NC1iMmQwLWIyYWFmNzRmYjI0NyIsImlhdCI6MTU1MjI5MjgxMiwibmJmIjoxNTUyMjkyODEyLCJleHAiOjE1NTIzMDAwMTIsImlzcyI6Imh0dHA6Ly9hcGkubWFzdGJpdC5jb206MzYxMTUiLCJhdWQiOiJodHRwOi8vd3d3Lm1hc3RiaXQuY29tIn0.I8bVvq6NOpHbW-aZ46b_Tpj2Yq54ydW51gu8NBOe4xQ'
                 }
             })
             .then(response => {
                 this.setState({dates: response.data.value})
+                this.setState({dateConst: response.data.value})
+
             })
             .catch((error) => {
                 console.log(error.response)
@@ -54,39 +53,25 @@ componentDidMount() {
 
     handleOnClick = () => {
 
-        let dateStart = new Date(this.state.selectedStartDate);
-        let dateEnd = new Date(this.state.selectedEndDate);
 
-        let getDateArray = (start, end) => {
-            let arr = new Array();
-            let dt = new Date(start);
-            while (dt <= end) {
-                arr.push({createdAt: new Date(dt).toDateString()});
-                dt.setDate(dt.getDate() + 1);
+        let dateStart = new Date(this.state.selectedStartDate).setHours(0, 0, 0, 0);
+        let dateEnd = new Date(this.state.selectedEndDate).setHours(0, 0, 0, 0);
+
+        let tempData = []
+
+        for (let i = 0; i < this.state.dateConst.length; i++) {
+            // console.log(new Date(this.state.dateConst[i].createdAt).setHours(0, 0, 0, 0))
+             //console.log('start date', dateStart)
+            if (new Date(this.state.dateConst[i].createdAt).setHours(0, 0, 0, 0) >= dateStart && new Date(this.state.dateConst[i].createdAt).setHours(0, 0, 0, 0) <= dateEnd) {
+                tempData.push(this.state.dateConst[i])
+
             }
-
-            return arr;
-
-
         }
-        let dateArr = getDateArray(dateStart, dateEnd);
-        console.log(dateArr);
-
-        this.setState({dates: dateArr})
+console.log(tempData)
+        this.setState({dates: tempData})
 
 
-
-        }
-
-
-
-
-
-
-
-
-
-
+    }
 
 
     render() {
@@ -123,8 +108,8 @@ componentDidMount() {
 
 
                 </div>
-                <Paper >
-                    <Table >
+                <Paper>
+                    <Table>
                         <TableHead>
                             <TableRow>
                                 <TableCell>Date</TableCell>
@@ -133,16 +118,15 @@ componentDidMount() {
                         </TableHead>
                         <TableBody>
 
-                                    {this.state.dates.map(date =>
-                                        <TableRow>
-                                        <TableCell>
-                                            <Moment format="DD/MM/YYYY">
+                            {this.state.dates.map(date =>
+                                <TableRow>
+                                    <TableCell>
+                                        <Moment format="DD/MM/YYYY">
                                             {date.createdAt}
-                                            </Moment>
-                                        </TableCell>
-                                        </TableRow>
-                                    )}
-
+                                        </Moment>
+                                    </TableCell>
+                                </TableRow>
+                            )}
 
 
                         </TableBody>
